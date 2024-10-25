@@ -28,7 +28,7 @@ def leetcode(futuTime):
 		if i['startTime'] <= tomo_time:
 			teel['title'] = i['title']
 			teel['startTime'] = i['startTime']
-			teel['duration'] = i['duration']/60
+			teel['duration'] = int(i['duration']/60)
 			teel['link'] = base_url + i['titleSlug']
 
 			leet.append(teel)

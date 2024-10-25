@@ -17,7 +17,7 @@ def codeforces(futuTime):
 			if i['startTimeSeconds'] <= tomo_time:
 				secrof['title'] = i['name']
 				secrof['startTime'] = i['startTimeSeconds']
-				secrof['duration'] = i['durationSeconds']/60
+				secrof['duration'] = int(i['durationSeconds']/60)
 				secrof['link'] = 'https://codeforces.com/contests'
 
 				forces.append(secrof)

@@ -8,6 +8,8 @@ from pathlib import Path
 from contests.codechef import codechef
 from contests.codeforces import codeforces
 from contests.leetcode import leetcode
+from contests.atcoder import atcoder
+from contests.geeksforgeeks import geeksforgeeks
 
 home_dir = Path.home()
 file_path = home_dir / '.imp.json'
@@ -109,20 +111,19 @@ def theMain(handles, epoch):
 
 
 def contest_msg():
-	con_msg = "::Tomorrow Contests::\n"
-	ojs = [codeforces, codechef, leetcode]
+	con_msg = "::Upcoming Contests::\n"
+	ojs = [codeforces, codechef, leetcode, atcoder, geeksforgeeks]
 	for oj in ojs:
-		cons = oj(1.5)
+		cons = oj(2)
 		if len(cons) == 0:
 			continue
 		for con in cons:
-			con_msg += f'''Name: {con['title']}\nTime: {setime(con['startTime'], '%d.%m %H:%M')}\nDuration: {con['duration']} Min\n{con['link']}\n'''
+			con_msg += f'''Name: {con['title']}\nTime: {setime(con['startTime'], '%d.%m %H:%M')}\nDuration: {con['duration']} Min\n{con['link']}\n\n'''
 	return con_msg
 
 
 todays_epoch = int(file("lastEpoch.txt", "read"))
 while True:
-	# if True:
 	if time() > todays_epoch+86400:
 
 		con_msg = contest_msg()
