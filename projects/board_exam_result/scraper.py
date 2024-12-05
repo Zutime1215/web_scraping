@@ -1,5 +1,6 @@
 import requests as r
 from bs4 import BeautifulSoup
+import json
 
 index_url = 'http://www.educationboardresults.gov.bd/index.php'
 result_url = 'http://www.educationboardresults.gov.bd/result.php'
@@ -17,7 +18,8 @@ def scraper(exam_selection, board_selection, year, roll, reg):
 	exam_options = exams.findAll('option')
 	for i in exam_options:
 		exam[i.text] = i['value']
-	del exam['HSC/Alim/Equivalent']
+	# del exam['HSC/Alim/Equivalent']
+	del exam['SSC/Dakhil/Equivalent']
 	exam_keys = list(exam.keys())
 
 	#board Type
@@ -36,7 +38,7 @@ def scraper(exam_selection, board_selection, year, roll, reg):
 
 	cookie = {'PHPSESSID':res.headers['Set-Cookie'][10:36]}
 	data = {
-		'et': 3,
+		'et': 2,
 		'sr': 3,
 		'exam': exam[exam_keys[exam_selection-1]],
 		'year': year,
@@ -48,8 +50,10 @@ def scraper(exam_selection, board_selection, year, roll, reg):
 	}
 
 	res = r.post(result_url, data=data, cookies=cookie)
+	
 	soup = BeautifulSoup(res.text, 'lxml')
 	table = soup.findAll('table')
+
 	personal_info = table[9].findAll('td')
 	subject_info = table[10].findAll('td')
 
@@ -61,3 +65,6 @@ def scraper(exam_selection, board_selection, year, roll, reg):
 		return_string += f'''{subject_info[i].text} - {subject_info[i+1].text} - {subject_info[i+2].text}\n'''
 
 	return return_string
+
+
+# print(scraper(2, 3, 2020, 152484, 1711661319))

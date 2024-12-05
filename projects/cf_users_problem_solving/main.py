@@ -65,48 +65,56 @@ def theMain(handles, epoch):
 	message = "```" + setime(epoch, '%Y-%m-%d') + "\n"
 
 	for handle in handles:
-		result = json.loads(requesting(cf_url+handle))["result"]
-
-		i = 0
-		total_tried = set()
-		accepted = set()
-		l = dd(set)
-
-		while result[i]["creationTimeSeconds"] >= epoch:
-			rslt = result[i]
-			prblm = rslt['problem']
-			verdict = rslt["verdict"]
-			
-			if "contestId" in prblm.keys():
-				problem_path = f'{prblm["contestId"]}/{prblm["index"]}'
-			elif prblm["problemsetName"] == "acmsguru":
-				problem_path = f'acmsguru/{prblm["index"]}'
-
-			
-			if "rating" in prblm.keys():
-				rating = rslt["problem"]['rating']
-			else:
-				rating = None
-
-
-			total_tried.add(problem_path)
-			if verdict == 'OK':
-				accepted.add(problem_path)
-
-			
-			l[prblm.get('rating')].add(f'{problem_path}')
-			
-			i+=1
-
-		if len(total_tried) == 0:
-			msg = ""
-		else:
-			rate = ""
-			for k,v in l.items():
-				rate += f"Rating({k}): {v}\n"
-			msg = f"""{handle}:\nTotal Tried: {len(total_tried)}\nAccepted: {len(accepted)}\n{rate}\n"""
+		rspns = json.loads(requesting(cf_url+handle))
+		stat = rspns['status']
+		result = rspns["result"]
 		
-		message += msg
+		if stat == 'FAILED':
+			message += (rspns["comment"] + "\n")
+		elif len(result) == 0:
+			message += f"{handle}: no solve yet\n"
+
+		else:
+			i = 0
+			total_tried = set()
+			accepted = set()
+			l = dd(set)
+
+			while result[i]["creationTimeSeconds"] >= epoch:
+				rslt = result[i]
+				prblm = rslt['problem']
+				verdict = rslt["verdict"]
+				
+				if "contestId" in prblm.keys():
+					problem_path = f'{prblm["contestId"]}/{prblm["index"]}'
+				elif prblm["problemsetName"] == "acmsguru":
+					problem_path = f'acmsguru/{prblm["index"]}'
+
+				
+				if "rating" in prblm.keys():
+					rating = rslt["problem"]['rating']
+				else:
+					rating = None
+
+
+				total_tried.add(problem_path)
+				if verdict == 'OK':
+					accepted.add(problem_path)
+
+				
+				l[prblm.get('rating')].add(f'{problem_path}')
+				
+				i+=1
+
+			if len(total_tried) == 0:
+				msg = ""
+			else:
+				rate = ""
+				for k,v in l.items():
+					rate += f"Rating({k}): {v}\n"
+				msg = f"""{handle}:\nTotal Tried: {len(total_tried)}\nAccepted: {len(accepted)}\n{rate}\n"""
+			
+			message += msg
 	return message
 
 
@@ -114,7 +122,7 @@ def contest_msg():
 	con_msg = "::Upcoming Contests::\n"
 	ojs = [codeforces, codechef, leetcode, atcoder, geeksforgeeks]
 	for oj in ojs:
-		cons = oj(2)
+		cons = oj(1)
 		if len(cons) == 0:
 			continue
 		for con in cons:
@@ -124,7 +132,7 @@ def contest_msg():
 
 todays_epoch = int(file("lastEpoch.txt", "read"))
 while True:
-	if time() > todays_epoch+86400:
+	if time() >= todays_epoch+86400:
 
 		con_msg = contest_msg()
 		profiles = json.loads(file("handles.json", "read"))
@@ -133,43 +141,15 @@ while True:
 			thread_id = "" if value["message_thread_id"] == -1 else value["message_thread_id"]
 			handles = value["handles"]
 			message = theMain(handles, todays_epoch)
-			message += '\n' + con_msg + "```"
-
-			if len(message) < 20:
+			if len(message) < 25:
 				message = f'''```{setime(todays_epoch, '%Y-%m-%d')}\nEkjon o korlo na, so sad!!!\n{con_msg}```'''
+			else:
+				message += '\n' + con_msg + "```"
+			
 			sendMessage(message, chat_id, thread_id)
 			# sendMessage(message)
 
 		todays_epoch += 86400
 		file("lastEpoch.txt", "write", todays_epoch)
-	# else:
-	# 	res = getUpdates()
-	# 	all_message = res['result']
-	# 	if len(all_message) == 0: continue
-	# 	last_update_id = int(file('lastUpdateId.txt', 'read'))
-
-	# 	for i in all_message:
-	# 		try: type = i['message']['entities'][0]['type']
-	# 		except: type = None
-	# 		if type == 'bot_command' and i['update_id'] > last_update_id:
-	# 			chat_id = i['message']['chat']['id']
-	# 			try: thread_id = i['message']['message_thread_id']
-	# 			except: thread_id = ""
-	# 			bot_cmd_msg = i['message']['text']
-
-	# 			if '/stat' in bot_cmd_msg:
-	# 				try:
-	# 					handles = bot_cmd_msg.split()[1].split("|")[0].split(",")
-	# 					hour = int(bot_cmd_msg.split()[1].split("|")[1])
-	# 				except:
-	# 					index_error = "Text Format is Wrong. Try with this format\n```YourBossSays\n/stat handle1,handle2,handle3|6```\nHere 6 means previous 6 hour status"
-	# 					sendMessage(index_error, chat_id, thread_id)
-	# 					continue
-
-	# 				message = theMain(handles, time()-(hour*3600))
-	# 				sendMessage(message, chat_id, thread_id)
-	# 				# sendMessage(message)
-
-	# 	file("lastUpdateId.txt", "write", all_message[-1]['update_id'])
 	
-	sleep(21600)
+	sleep(3600)

@@ -1,1 +1,46 @@
-{"cou_ict_14": {"chat_id": -1001988235203, "message_thread_id": 3015, "handles": ["Asclepius", "RED_BAVARIAN", "nadimul_islam0121", "Noyon_Mozumder", "Binary-Brigade", "Sirens", "FMdul_amin", "AL_AMIN_ZERO", "BAYAZID...", "Turtle_0", "Itz_Avi", "Kushick", "iamsalman778", "anArChy_sag3"]}, "nerve_gear": {"chat_id": -1001904290339, "message_thread_id": 21812, "handles": ["asnayeem204", "salehinRifat", "Sirens"]}}
+{
+    "cou_ict_14": {
+      "chat_id": -1001988235203,
+      "message_thread_id": 3015,
+      "handles": [
+        "Asclepius",
+        "RED_BAVARIAN",
+        "nadimul_islam0121",
+        "Noyon_Mozumder",
+        "Binary-Brigade",
+        "Sirens",
+        "montasir_fahim",
+        "FMdul_amin",
+        "AL_AMIN_ZERO",
+        "BAYAZID...",
+        "Turtle_0",
+        "Itz_Avi",
+        "Kushick",
+        "anArChy_sag3"
+      ]
+    },
+    "nerve_gear": {
+      "chat_id": -1001904290339,
+      "message_thread_id": 21812,
+      "handles": [
+        "asnayeem204",
+        "salehinRifat",
+        "Sirens"
+      ]
+    },
+    "cou_ict_15": {
+      "chat_id": 2048432908,
+      "message_thread_id": "",
+      "handles": [
+        "FardinMahadi",
+        "FatemaBhuiyan",
+        "ANH_Asif",
+        "Samia_Nishat",
+        "rakibapuspita",
+        "Nusrat2006",
+        "Delta_plus",
+        "mdyasinsarker444",
+        "Md.Ashik_Alam"
+      ]
+    }
+}
